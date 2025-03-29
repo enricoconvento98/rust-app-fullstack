@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.${ENV:-dev}
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend:/usr/src/app
+      - cargo-registry:/usr/local/cargo/registry
+    environment:
+      - RUST_LOG=debug
+      - PORT=3000
+    restart: unless-stopped
+    networks:
+      - rust-network
+
+volumes:
+  cargo-registry:
+
+networks:
+  rust-network:
+    driver: bridge
