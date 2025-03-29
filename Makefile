@@ -12,26 +12,31 @@ help:
 	@echo "  dev        - Build and run in development mode (default)"
 
 build:
-	docker-compose build
+	docker compose build
 
 up:
-	docker-compose up -d
+	docker compose up -d
 
 down:
-	docker-compose down
+	docker compose down
 
 logs:
-	docker-compose logs -f
+	docker compose logs -f
 
 test:
 	cd backend && cargo test
 
 clean: down
-	docker-compose rm -f
+	docker compose rm -f
 	docker volume prune -f
 
 prod:
-	ENV=prod docker-compose up --build -d
+	ENV=prod docker compose up --build -d
 
 dev:
-	ENV=dev docker-compose up --build -d
+	ENV=dev docker compose up --build -d
+
+test-server:
+	@echo "Testing server health..."
+	@curl -s http://localhost:3000/health | jq . || (echo "Server not responding!" && exit 1)
+	@echo "Server is healthy!"
