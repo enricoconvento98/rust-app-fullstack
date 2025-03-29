@@ -1,39 +1,33 @@
-use axum::{
-    routing::get,
-    Router,
-    response::Json,
-};
-use serde::Serialize;
+use backend::app;  // Only import what's needed
+use std::net::SocketAddr;
 use tokio::net::TcpListener;
-
-#[derive(Serialize)]
-struct HealthCheck {
-    status: String,
-    message: String,
-}
-
-async fn health_check() -> Json<HealthCheck> {
-    Json(HealthCheck {
-        status: "ok".to_string(),
-        message: "Server is running".to_string(),
-    })
-}
+use tower_http::trace::TraceLayer;
+use tracing_subscriber::{fmt, EnvFilter};
 
 #[tokio::main]
 async fn main() {
-    // Build our application with a single route
-    let app = Router::new()
-        .route("/health", get(health_check));
+    // Initialize tracing
+    fmt()
+        .with_env_filter(
+            EnvFilter::try_from_default_env()
+                .unwrap_or_else(|_| EnvFilter::new("info"))
+        )
+        .init();
 
-    // Create a TCP listener
-    let listener = TcpListener::bind("0.0.0.0:3000")
+    // Build application using shared app() function
+    let app = app()
+        // Add additional layers specific to main application
+        .layer(TraceLayer::new_for_http());
+
+    // Configure bind address
+    let addr = SocketAddr::from(([0, 0, 0, 0], 3000));
+    let listener = TcpListener::bind(addr)
         .await
-        .unwrap();
+        .expect("Failed to bind to port 3000");
     
-    println!("Server running on http://localhost:3000");
+    tracing::info!("Server running on {}", addr);
     
-    // Serve the application
     axum::serve(listener, app)
         .await
-        .unwrap();
+        .expect("Server failed");
 }

@@ -7,5 +7,17 @@ edition = "2021"
 axum = "0.8.3"
 tokio = { version = "1.0", features = ["full"] }
 serde = { version = "1.0", features = ["derive"] }
-tower-http = { version = "0.6.2", features = ["cors"] }
+tower-http = { version = "0.6.2", features = ["cors", "trace"] }
 anyhow = "1.0"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+[lib]
+name = "backend"
+path = "src/lib.rs"
+
+[dev-dependencies]
+tokio = { version = "1.0", features = ["full", "rt-multi-thread", "time"] }
+tower = "0.5.2"
+futures = "0.3"
+hyper = "1.6.0"

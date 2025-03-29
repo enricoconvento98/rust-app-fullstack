@@ -38,5 +38,10 @@ dev:
 
 test-server:
 	@echo "Testing server health..."
-	@curl -s http://localhost:3000/health | jq . || (echo "Server not responding!" && exit 1)
-	@echo "Server is healthy!"
+	@if curl -s -f http://localhost:3000/health >/dev/null; then \
+		echo "Server is healthy!"; \
+		curl -s http://localhost:3000/health | jq . 2>/dev/null || echo "Got response:" && curl -s http://localhost:3000/health; \
+	else \
+		echo "Server not responding!"; \
+		exit 1; \
+	fi
