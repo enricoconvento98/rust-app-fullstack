@@ -23,8 +23,15 @@ down:
 logs:
 	docker compose logs -f
 
+# Run all tests in running container
 test:
-	cd backend && cargo test
+	docker compose exec backend cargo test -- --nocapture
+
+# Run specific test file (e.g., concurrency.rs)
+test-file:
+	docker compose exec backend cargo test --test $(FILE) -- --nocapture
+
+# Example: make test-file FILE=concurrency
 
 clean: down
 	docker compose rm -f
