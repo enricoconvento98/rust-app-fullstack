@@ -17,8 +17,11 @@ Cargo.lock
 # Backend specific
 /backend/target/
 /backend/Cargo.lock
+/backend/.env
+/backend/debug/
+/backend/coverage/
 
-# Frontend specific (if you add later)
+# Frontend specific
 /frontend/node_modules/
 /frontend/dist/
 /frontend/.cache/
@@ -29,10 +32,25 @@ Cargo.lock
 /frontend/.svelte-kit/
 /frontend/.vercel/
 /frontend/.next/
+/frontend/build/
+/frontend/coverage/
+/frontend/.env.development.local
+/frontend/.env.test.local
+/frontend/.env.production.local
+/frontend/.pnp
+/frontend/.pnp.js
+/frontend/npm-debug.log*
+/frontend/yarn-debug.log*
+/frontend/yarn-error.log*
+
+# TypeScript
+*.tsbuildinfo
+.eslintcache
 
 # Docker
 docker-compose.override.yml
 *.dockerignore
+.docker/
 
 # Logs
 *.log
@@ -48,7 +66,29 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
 
+# Testing
+/coverage/
+.nyc_output/
 
 # Clickhouse
 /clickhouse_data/
+/clickhouse_config/
+
+# Dependencies
+node_modules/
+/.pnp
+.pnp.js
+
+# Debug
+.debug/
+debug.log
+
+# Temporary files
+*.tmp
+*.temp
+.cache/

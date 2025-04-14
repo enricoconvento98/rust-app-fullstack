@@ -13,8 +13,7 @@ tracing = "0.1"
 serde_json = "1.0"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 clickhouse = "0.13.2"
-
-
+chrono = { version = "0.4", features = ["serde"] }
 
 [lib]
 name = "backend"
@@ -29,3 +28,5 @@ serde_json = "1.0"
 lazy_static = "1.4"
 test-log = { version = "0.2", features = ["trace"] }  # For better test logging
 clickhouse = "0.13.2"
+serial_test = "0.4"  # Added for serial test execution
+pretty_assertions = "1.4"  # Added for better test assertions

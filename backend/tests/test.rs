@@ -1,4 +1,5 @@
 use clickhouse::Client;
+use clickhouse::Row;
 use serde::{Serialize, Deserialize};
 use anyhow::{Result, Context};
 use serial_test::serial;
@@ -11,11 +12,11 @@ struct MyRow {
 
 // Test setup helper
 async fn create_test_client() -> Result<Client> {
-    Client::default()
+    Ok(Client::default()
         .with_url("http://clickhouse:8123")
         .with_user("default")
         .with_password("password")
-        .with_database("default")
+        .with_database("default"))
 }
 
 #[tokio::test]
@@ -38,32 +39,34 @@ async fn test_connection_basic() -> Result<()> {
 async fn test_primitive_type_query() -> Result<()> {
     let client = create_test_client().await?;
     
-    let result: u32 = client.query("SELECT 42")
+    let result: u32 = client.query("SELECT toUInt32(42) as value")
         .fetch_one()
-        .await?;
-        
+        .await
+        .context("Failed to fetch result")?;
+    
+    println!("Result: {}", result);    
     assert_eq!(result, 42);
     Ok(())
 }
 
-// #[tokio::test]
-// #[serial]
-// async fn test_custom_struct_mapping() -> Result<()> {
-//     let client = create_test_client().await?;
+#[tokio::test]
+#[serial]
+async fn test_custom_struct_mapping() -> Result<()> {
+    let client = create_test_client().await?;
     
-//     // Test with column alias that matches struct field
-//     let res: MyRow = client.query("SELECT 123 as value")
-//         .fetch_one()
-//         .await?;
+    // Test with column alias that matches struct field
+    let res: MyRow = client.query("SELECT toUInt32(123) as value")
+        .fetch_one()
+        .await?;
         
-//     assert_eq!(res.value, 123);
+    assert_eq!(res.value, 123);
     
-//     // Test JSON serialization
-//     let json = serde_json::to_string(&res)?;
-//     assert_eq!(json, r#"{"value":123}"#);
+    // Test JSON serialization
+    let json = serde_json::to_string(&res)?;
+    assert_eq!(json, r#"{"value":123}"#);
     
-//     Ok(())
-// }
+    Ok(())
+}
 
 // #[tokio::test]
 // #[serial]
