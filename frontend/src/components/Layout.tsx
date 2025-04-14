@@ -195,7 +195,7 @@ const Layout = () => {
           
           {/* Stats Cards */}
           {[
-            { title: 'Total Queries', value: '1,234', color: 'primary.main' },
+            { title: 'Total Queries', value: '1,255', color: 'primary.main' },
             { title: 'Database Size', value: '2.1 GB', color: 'secondary.main' },
             { title: 'Active Tables', value: '15', color: 'success.main' },
             { title: 'Query Time', value: '45ms', color: 'info.main' },

@@ -4,9 +4,12 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.${FRONTEND_ENV:-dev}
     ports:
-      - "8081:80"
+      - "${FRONTEND_PORT:-5173}:${FRONTEND_PORT:-5173}"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
     networks:
       - rust-network
     depends_on:
