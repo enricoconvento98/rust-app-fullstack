@@ -1,4 +1,4 @@
-.PHONY: help build up down logs test clean
+.PHONY: help build up down logs test clean test-server test-clickhouse
 
 help:
 	@echo "Available targets:"
@@ -10,6 +10,8 @@ help:
 	@echo "  clean      - Remove all containers and clean up"
 	@echo "  prod       - Build and run in production mode"
 	@echo "  dev        - Build and run in development mode (default)"
+	@echo "  test-server - Test server health"
+	@echo "  test-clickhouse - Test ClickHouse health"
 
 build:
 	docker compose build
@@ -50,5 +52,14 @@ test-server:
 		curl -s http://localhost:3000/health | jq . 2>/dev/null || echo "Got response:" && curl -s http://localhost:3000/health; \
 	else \
 		echo "Server not responding!"; \
+		exit 1; \
+	fi
+
+test-clickhouse:
+	@echo "Testing ClickHouse health..."
+	@if curl -s -f http://localhost:8123/ping >/dev/null; then \
+		echo "ClickHouse is healthy!"; \
+	else \
+		echo "ClickHouse not responding!"; \
 		exit 1; \
 	fi

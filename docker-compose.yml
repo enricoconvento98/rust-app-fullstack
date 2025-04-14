@@ -17,8 +17,30 @@ services:
     networks:
       - rust-network
 
+  clickhouse:
+    image: clickhouse/clickhouse-server:latest
+    ports:
+      - "8123:8123"  # HTTP API
+      - "9000:9000"  # Native protocol
+    volumes:
+      - ./clickhouse_data/data:/var/lib/clickhouse  # Local folder for data
+      # - ./clickhouse_data/config:/etc/clickhouse-server/config.d  # Custom configs
+    environment:
+      - CLICKHOUSE_DB=default
+      - CLICKHOUSE_USER=default
+      - CLICKHOUSE_PASSWORD=password
+    networks:
+      - rust-network
+    healthcheck:
+      test: ["CMD-SHELL", "wget -O - http://localhost:8123/ping || exit 1"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+
 volumes:
   cargo-registry:
+  clickhouse_data:
+  clickhouse_config:
 
 networks:
   rust-network:

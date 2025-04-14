@@ -48,3 +48,7 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+
+
+# Clickhouse
+/clickhouse_data/
