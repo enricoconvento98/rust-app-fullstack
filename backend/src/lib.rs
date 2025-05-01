@@ -9,6 +9,10 @@ use axum::{
 use serde::Serialize;
 use std::time::Instant;
 
+// Database modules
+pub mod db;
+pub use db::*;  // Re-export all public db items
+
 #[derive(Serialize)]
 pub struct HealthCheck {
     status: String,
